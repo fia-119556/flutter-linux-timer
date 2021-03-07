@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(MyApp());
@@ -26,9 +27,45 @@ class _MyHomePageState extends State<MyHomePage> {
   String _time = "00:00";
   String _start = "START";
 
-  void _numberPressed(String number) {}
+  void _numberPressed(String number) {
+    setState(() {
+      if (_start == "START") {
+        _time = _time[1] + _time[3] + ":" + _time[4] + number;
+      }
+    });
+  }
 
-  void _startPressed() {}
+  void _startPressed() {
+    if (_time == "00:00") return;
+    setState(() {
+      if (_start == "START") {
+        _start = "STOP";
+      } else {
+        _start = "START";
+      }
+    });
+    Timer.periodic(
+      Duration(seconds: 1),
+      (Timer timer) => setState(
+        () {
+          if (_start == "START") {
+            timer.cancel();
+          } else {
+            List t = _time.split(':');
+            int sec = int.parse(t[0]) * 60 + int.parse(t[1]);
+            sec--;
+            _time = (sec ~/ 60).toString().padLeft(2, "0") +
+                ":" +
+                (sec % 60).toString().padLeft(2, "0");
+            if (sec == 0) {
+              timer.cancel();
+              _start = "START";
+            }
+          }
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
