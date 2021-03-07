@@ -30,7 +30,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _numberPressed(String number) {
     setState(() {
       if (_start == "START") {
-        _time = _time[1] + _time[3] + ":" + _time[4] + number;
+        int len = _time.length;
+        _time = _time[len - 4] + _time[len - 2] + ":" + _time[len - 1] + number;
       }
     });
   }
